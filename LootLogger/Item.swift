@@ -21,12 +21,14 @@ class Item: Equatable {
     var valueInDollars: Int
     var serialNumber: String?
     let dateCreated: Date
+    var section: String
     
-    init(name:String, valueInDollars:Int, serialNumber: String?) {
+    init(name:String, valueInDollars:Int, serialNumber: String?, section: String) {
         self.name = name
         self.valueInDollars = valueInDollars
         self.serialNumber = serialNumber
         self.dateCreated = Date()
+        self.section = section
     }
     
     convenience init(random: Bool = false) {
@@ -41,9 +43,10 @@ class Item: Equatable {
             let randomValue = Int.random(in: 0..<100)
             let randomSerialNumber = UUID().uuidString.components(separatedBy: "_").first!
             
-            self.init(name: randomName, valueInDollars: randomValue, serialNumber: randomSerialNumber)
+            let section = randomValue >= 50 ? "> 50"  : "< 50"
+            self.init(name: randomName, valueInDollars: randomValue, serialNumber: randomSerialNumber, section: section)
         } else {
-            self.init(name: "",  valueInDollars: 0, serialNumber: nil)
+            self.init(name: "No Items found",  valueInDollars: 0, serialNumber: nil, section: "No Item found")
         }
     }
     

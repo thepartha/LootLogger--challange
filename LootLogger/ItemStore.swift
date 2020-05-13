@@ -10,24 +10,31 @@ import UIKit
 
 class ItemStore {
     
-    var allItems = [[Item](),[Item]()]
-    var sections = ["Price > $50", "Price < $50"]
+    var allItems = [[Item(random: true)],[Item(random: true)]]
+    var noItem: Bool = false
     
-    @discardableResult func createItem() -> Item{
-        let newItem = Item(random: true)
-        if newItem.valueInDollars >= 50 {
-        allItems[0].append(newItem)
+    
+    @discardableResult func createItem(random: Bool,sectionIndex: IndexPath? = nil) -> Item{
+        let newItem = Item(random: random)
+        if let index = sectionIndex {
+            allItems[index.section].append(newItem)
+            noItem = true
         } else {
-            allItems[1].append(newItem)
+            if newItem.valueInDollars >= 50 {
+            allItems[0].append(newItem)
+            } else {
+                allItems[1].append(newItem)
+            }
+            
         }
          
         return newItem
     }
     
-    func removeItem(_ item: Item){
-        let sectionIndex = item.valueInDollars >= 50 ? 0 : 1
-        if let index = allItems[sectionIndex].firstIndex(of: item){
-                    allItems[sectionIndex].remove(at: index)
+    func removeItem(_ item: Item, _ sectionIndex: IndexPath){
+        
+        if let index = allItems[sectionIndex.section].firstIndex(of: item){
+            allItems[sectionIndex.section].remove(at: index)
           }
     }
     
@@ -39,5 +46,5 @@ class ItemStore {
         allItems[fromSectionIndex].remove(at: fromIndex)
         allItems[toSectionIndex].insert(moveItem, at: toIndex)
     }
-     
+
 }
