@@ -25,9 +25,8 @@ class ItemStore {
             } else {
                 allItems[1].append(newItem)
             }
-            
         }
-         
+   
         return newItem
     }
     

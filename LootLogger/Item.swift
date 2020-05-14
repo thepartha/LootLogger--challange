@@ -22,6 +22,7 @@ class Item: Equatable {
     var serialNumber: String?
     let dateCreated: Date
     var section: String
+    var isFavorite: Bool
     
     init(name:String, valueInDollars:Int, serialNumber: String?, section: String) {
         self.name = name
@@ -29,6 +30,7 @@ class Item: Equatable {
         self.serialNumber = serialNumber
         self.dateCreated = Date()
         self.section = section
+        self.isFavorite = false
     }
     
     convenience init(random: Bool = false) {

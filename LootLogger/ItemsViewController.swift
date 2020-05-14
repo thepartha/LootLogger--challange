@@ -71,9 +71,9 @@ class ItemsViewController: UITableViewController {
     override func tableView(_ tableView:UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
         let item = itemStore.allItems[indexPath.section][indexPath.row]
-            cell.textLabel?.text = item.name
+        cell.textLabel?.text = item.isFavorite ? item.name + " Fav" : item.name
             cell.detailTextLabel?.text = "$\(item.valueInDollars)"
-             return cell
+            return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -91,5 +91,16 @@ class ItemsViewController: UITableViewController {
        itemStore.moveItems(from: sourceIndexPath.row, to: destinationIndexPath.row, fromSection: sourceIndexPath.section, toSection: destinationIndexPath.section)
     }
     
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let favAction = UIContextualAction(style: .normal, title: "Favorite", handler: { _,_,_ in
+            self.itemStore.allItems[indexPath.section][indexPath.row].isFavorite = !self.itemStore.allItems[indexPath.section][indexPath.row].isFavorite
+            tableView.cellForRow(at: indexPath)?.textLabel?.text =  self.itemStore.allItems[indexPath.section][indexPath.row].isFavorite ? self.itemStore.allItems[indexPath.section][indexPath.row].name + " Fav" : self.itemStore.allItems[indexPath.section][indexPath.row].name
+        })
+        let swipeConfig = UISwipeActionsConfiguration(actions: [favAction])
+        swipeConfig.performsFirstActionWithFullSwipe = true
+        return swipeConfig
+    }
+    
+  
     
 }
