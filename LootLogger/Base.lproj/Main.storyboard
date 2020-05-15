@@ -36,6 +36,9 @@
                                     <rect key="frame" x="161" y="15" width="63" height="30"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Favorties"/>
+                                    <connections>
+                                        <action selector="filterNames" destination="t8q-x4-hd8" eventType="touchUpInside" id="ZGA-w2-Rrn"/>
+                                    </connections>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>

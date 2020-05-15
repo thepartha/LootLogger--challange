@@ -12,6 +12,8 @@ class ItemsViewController: UITableViewController {
     
     //injection through a property to give it a store.
     var itemStore: ItemStore!
+    var filtersArray: [Item]!
+    var filter:Bool = false
     
     @IBAction func addNewItem(_ sender:UIButton) {
         let newItem = itemStore.createItem(random: true)
@@ -39,6 +41,18 @@ class ItemsViewController: UITableViewController {
         }
     }
     
+    @IBAction func filterNames () {
+        filter = !filter
+        if filter {
+            let allNames = self.itemStore.allItems[0] + self.itemStore.allItems[1]
+            self.filtersArray = allNames.filter { (item) -> Bool in
+                return item.isFavorite == true
+            }
+        }
+        tableView.reloadData()
+    }
+    
+    
     func createNoItems(sectionIndex: IndexPath) {
         let noItem = itemStore.createItem(random: false,sectionIndex: sectionIndex)
         if let index = itemStore.allItems[sectionIndex.section].firstIndex(of: noItem) {
@@ -51,29 +65,49 @@ class ItemsViewController: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return itemStore.allItems.count
+        if !filter {
+            return itemStore.allItems.count
+        } else {
+            return 1
+        }
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         var sectionHeader = ""
-        if itemStore.allItems[section].count > 0 {
+        if !filter {
             sectionHeader = itemStore.allItems[section][0].section
-            return sectionHeader
+        } else {
+            sectionHeader = "Favorites"
         }
         return sectionHeader
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section:Int) -> Int {
-        return itemStore.allItems[section].count
+        let count: Int
+        if !filter {
+           count =  itemStore.allItems[section].count
+        } else {
+            count = filtersArray.count
+        }
+        return count
     }
     
 
     override func tableView(_ tableView:UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        if let farry = filtersArray {
+            print(farry.count)
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
-        let item = itemStore.allItems[indexPath.section][indexPath.row]
+        let item: Item
+        if !filter {
+        item = itemStore.allItems[indexPath.section][indexPath.row]
+         } else {
+         item = filtersArray[indexPath.row]
+        }
         cell.textLabel?.text = item.isFavorite ? item.name + " Fav" : item.name
-            cell.detailTextLabel?.text = "$\(item.valueInDollars)"
-            return cell
+        cell.detailTextLabel?.text = "$\(item.valueInDollars)"
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -86,6 +120,7 @@ class ItemsViewController: UITableViewController {
             }
         }
     }
+
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
        itemStore.moveItems(from: sourceIndexPath.row, to: destinationIndexPath.row, fromSection: sourceIndexPath.section, toSection: destinationIndexPath.section)
